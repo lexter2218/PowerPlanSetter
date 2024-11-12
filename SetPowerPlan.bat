@@ -1,8 +1,8 @@
 @echo off
 setlocal enabledelayedexpansion
 
+:choosing
 echo =================================== POWER PLAN SETTER ===================================
-
 rem Set the path to the PowerPlans folder
 set "PowerPlansFolder=PowerPlans"
 
@@ -14,8 +14,15 @@ if not exist "%PowerPlansFolder%" (
     echo.
 )
 
+rem Get Current Selected Power Plan
+for /f "tokens=*" %%i in ('powercfg /getactivescheme') do set currentSelected=%%i
+set currentSelected=%currentSelected:~58,-1%
+echo The current selected power plan is: %currentSelected%
+echo.
+
 rem Initialize a counter and display all .bat files in PowerPlans folder
 set /a counter=0
+echo [0] : Exit
 for %%f in (%PowerPlansFolder%\SetPowerPlan*.bat) do (
     set /a counter+=1
     set "file[!counter!]=%%f"
@@ -27,13 +34,16 @@ for %%f in (%PowerPlansFolder%\SetPowerPlan*.bat) do (
 rem Prompt user to select a file
 set /p choice=Enter the number of the file you want to run: 
 echo.
-
-rem Validate the choice
-if defined file[%choice%] (
-    echo Running !name! Power Plan!
-    call "!file[%choice%]!"
-) else (
-    echo Invalid selection.
+if !choice! EQU 0 (
+	echo Closing the program...
+	pause
+	exit
+) else if defined file[%choice%] (call "!file[%choice%]!") else (
+	echo Invalid selection.
+	pause
+	cls
+	goto choosing
+	echo.
 )
 echo.
 

@@ -27,9 +27,9 @@ for /f "tokens=*" %%A in ('powercfg /list') do (
 			set planName=!planName:~0,-1!
 			set planName=!planName:~0,-1!
 		)
-		set planName=!planName: =!
+		set planNameTrimmed=!planName: =!
 		
-		set fileName="PowerPlans\SetPowerPlan!planName!.bat"
+		set fileName="PowerPlans\SetPowerPlan!planNameTrimmed!.bat"
 
                 :: Create a new .bat file for this power plan in the "PowerPlans" folder
 	    	echo @echo off >> !fileName!
